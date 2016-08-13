@@ -9,11 +9,11 @@ Item {
     property alias text: label.text
     property alias source: image.source
     property var dragTarget
-
+    property bool dispEdit
     property var _originalParent
     property var _newParent
 
-    signal pressAndHold(var model)
+    signal pressAndHold()
     signal clicked
 
     Drag.active: mouseArea.drag.active
@@ -22,13 +22,13 @@ Item {
 
     width: 80
     height: 80
-
     Component.onCompleted: {
         _originalParent = parent
         _newParent = _originalParent
     }
 
-    ColumnLayout {
+    ColumnLayout
+    {
         anchors {
             top: parent.top
             left: parent.left
@@ -46,6 +46,18 @@ Item {
             Layout.preferredWidth: Math.round(59 * ScreenValues.dp)
 
             fillMode: Image.PreserveAspectFit
+            Image {
+                id: canEditMask
+                visible: dispEdit
+                width: Math.round(24 * ScreenValues.dp)
+                height: width
+                rotation: 45
+                anchors.right: parent.right
+                anchors.rightMargin: -width/2
+                anchors.top: parent.top
+                anchors.topMargin: -width/2
+                source: "qrc:/images/edit"
+            }
         }
 
         Label {
@@ -62,7 +74,7 @@ Item {
 
             font.pixelSize: 12 * ScreenValues.dp
 
-            color: "#666666"
+            color: "#fff"
         }
     }
 
@@ -76,8 +88,7 @@ Item {
         drag.target: root.dragTarget
 
         onClicked: root.clicked()
-        onPressAndHold: root.pressAndHold(model)
-
+        onPressAndHold: root.pressAndHold()
         onReleased: root._newParent = (root.Drag.target !== null ? root.Drag.target : root._originalParent)
 
         states: [

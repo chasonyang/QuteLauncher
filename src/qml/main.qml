@@ -8,7 +8,7 @@ ApplicationWindow {
 
     property bool isWindowActive: Qt.application.state === Qt.ApplicationActive
     property int dpi: Screen.pixelDensity * 25.4
-
+    color: "black"
     property var resolutions: [
         {"height": 480, "width": 320}, // HVGA
         {"height": 640, "width": 480}, // VGA
@@ -53,9 +53,6 @@ ApplicationWindow {
         }
     }
 
-
-    color: "#00000000"
-
     width: resolutions[currentResolution].width
     height: resolutions[currentResolution].height
 
@@ -81,7 +78,10 @@ ApplicationWindow {
         }
 
         Keys.onBackPressed: {
-            if (explandableItem.isOpened) {
+            if(appGrid.editMode){
+                appGrid.editMode=false;
+            }
+            else if (explandableItem.isOpened) {
                 explandableItem.close()
             }
         }
@@ -93,42 +93,12 @@ ApplicationWindow {
         onTriggered: PackageManager.registerBroadcast()
     }
 
-    BorderImage  {
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: parent.top
-        }
-
-        height: ScreenValues.statusBarHeight
-
-        source: "qrc:/images/shadow"
-        border.left: 5; border.top: 5
-        border.right: 5; border.bottom: 5
-    }
-
-    BorderImage  {
-        id: borderImageNavBar
-
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
-
-        height: ScreenValues.navBarVisible ? ScreenValues.navigationBarHeight : 0
-        source: ScreenValues.navBarVisible ? "qrc:/images/shadow_navigationbar" : ""
-
-        border {
-            left: 5; top: 5
-            right: 5; bottom: 5
-        }
-    }
 
     Item {
         anchors {
             top: parent.top; topMargin: ScreenValues.statusBarHeight
-            bottom: borderImageNavBar.top
+            bottom: parent.bottom
+            bottomMargin: Math.round(48 * ScreenValues.dp)
             left: parent.left
             right: parent.right
         }
@@ -138,18 +108,12 @@ ApplicationWindow {
 
             anchors.fill: parent
 
-            ApplicationGrid {
-                model: PackageManager
+                ApplicationGrid {
+                    id:appGrid
+                    model: PackageManager
 
-                anchors.fill: parent
-
-                onPressAndHold: {
-                    applicationTile.source = "image://icon/" + model.packageName
-                    applicationTile.text = model.name
-
-                    explandableItem.close()
+                    anchors.fill: parent
                 }
-            }
         }
     }
 
@@ -158,57 +122,4 @@ ApplicationWindow {
         enabled: explandableItem.busy
     }
 
-    IntroView {
-        anchors.fill: parent
-
-        enabled: false
-        visible: false
-
-        model: ListModel {
-            ListElement { backgroundColor: "#1abd9c" }
-            ListElement { backgroundColor: "#2fcd72" }
-        }
-    }
-
-    GridView {
-        /// TODO: verify in landscape mode
-        anchors {
-            top: parent.top; topMargin: ScreenValues.statusBarHeight
-            left: parent.left
-            right: parent.right
-        }
-
-        height: 4 * (80 * ScreenValues.dp)
-        model: 16
-        interactive: false
-        cellHeight: height / 4
-        cellWidth: width / 4
-
-        delegate: DropArea {
-            width: GridView.view.cellWidth
-            height: GridView.view.cellHeight
-        }
-    }
-
-    Row {
-        id: rowFavorites
-
-        anchors.bottom: borderImageNavBar.top
-
-        height: 80 * ScreenValues.dp
-
-        Repeater {
-            model: 5
-
-            DropArea {
-                width: 80 * ScreenValues.dp
-                height: 80 * ScreenValues.dp
-            }
-        }
-    }
-
-    ApplicationTile {
-        id: applicationTile
-        dragTarget: applicationTile
-    }
 }

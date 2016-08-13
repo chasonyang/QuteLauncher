@@ -8,10 +8,11 @@ GridView {
     id: root
 
     property int highlightedItem
+    property bool editMode: false
 
-    signal pressAndHold(var model)
 
     maximumFlickVelocity: height * 2.5
+
 
     header: Item {
         width: parent.width
@@ -42,10 +43,21 @@ GridView {
 
         source: "image://icon/" + model.packageName
         text: model.name
+        dispEdit: editMode
 
-        onClicked: PackageManager.launchApplication(model.packageName)
-        onPressAndHold: root.pressAndHold(model)
+        onClicked: {
+
+            PackageManager.launchApplication(model.packageName)
+        }
+
+        onPressAndHold: {
+            if(editMode==true)
+                editMode=false
+            else
+                editMode=true
+        }
     }
+
 
     onHeightChanged: {
         if (cacheBuffer !== 0)

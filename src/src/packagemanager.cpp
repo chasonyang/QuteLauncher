@@ -64,6 +64,7 @@ QVariant PackageManager::data(const QModelIndex &index, int role) const
 
 #ifdef Q_OS_ANDROID
 void PackageManager::registerNativeMethods() {
+    qDebug() << Q_FUNC_INFO << "registering NativeMethods";
     JNINativeMethod methods[] {{"jpackageRemoved", "(Ljava/lang/String;J)V", reinterpret_cast<void *>(packageRemoved)},
         {"jpackageAdded", "(Ljava/lang/String;Ljava/lang/String;J)V", reinterpret_cast<void *>(packageAdded)}};
 
@@ -131,6 +132,7 @@ QString GetRandomString()
 void PackageManager::retrievePackages()
 {
     beginResetModel();
+
 #ifdef Q_OS_ANDROID
     QAndroidJniObject connectionType = QAndroidJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QuteLauncher",
                                                                                  "applications",
@@ -151,6 +153,7 @@ void PackageManager::retrievePackages()
 
         if (packageName == "com.google.android.launcher")
             continue;
+
 
         mApplications.append(new Application(name.simplified(), packageName));
     }

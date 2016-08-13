@@ -5,7 +5,6 @@ Item {
     default property alias content: itemContainer.data
     property alias color: rectangleMinizedIndicator.color
     property alias busy: transition.running
-
     property int minimizedHeight: Math.round(48 * ScreenValues.dp)
     property int minimizedWidth: Math.round(48 * ScreenValues.dp)
 
@@ -36,6 +35,7 @@ Item {
         }
     }
 
+
     Rectangle {
         id: rectangleMinizedIndicator
 
@@ -61,6 +61,7 @@ Item {
                     height: minimizedHeight; width: minimizedWidth
                     x: Math.round(minimizedPoint.x - (minimizedWidth / 2)); y: minimizedPoint.y
                     radius: Math.round(minimizedWidth / 2)
+                    color:"#fff"
                 }
 
                 PropertyChanges {
@@ -74,6 +75,7 @@ Item {
                     target: rectangleMinizedIndicator
                     height: targetHeight; width: targetWidth
                     x: targetPoint.x; y: targetPoint.y
+                    color:"#000"
                     radius: Math.round(2 * ScreenValues.dp)
                 }
 
@@ -98,6 +100,7 @@ Item {
                             PropertyAnimation { target: rectangleMinizedIndicator; properties: "height, width"; easing.type: Easing.InOutCubic }
                             PropertyAnimation { target: rectangleMinizedIndicator; property: "radius"; easing.type: Easing.InOutCubic }
                             PropertyAnimation { target: rectangleMinizedIndicator; property: "x"; easing.type: Easing.InOutCubic }
+                            PropertyAnimation {target: rectangleMinizedIndicator; property: "color"; easing.type: Easing.InOutCubic }
                             SequentialAnimation {
                                 PauseAnimation { duration: 150 }
                                 PropertyAnimation { target: itemContainer; property: "opacity"; easing.type: Easing.InOutCubic}
@@ -130,6 +133,7 @@ Item {
         enabled: stateGroup.state === "closed"
 
         onClicked: {
+            console.log("expandableItem",minimizedWidth,minimizedHeight)
             if (stateGroup.state === "closed") {
                 stateGroup.state = "opened"
             } else {

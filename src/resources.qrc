@@ -11,5 +11,6 @@
         <file alias="background">resources/images/background.jpg</file>
         <file alias="shadow">resources/images/shadow.png</file>
         <file alias="shadow_navigationbar">resources/images/shadow_navigationbar.png</file>
+        <file alias="edit">resources/images/minimized.png</file>
     </qresource>
 </RCC>

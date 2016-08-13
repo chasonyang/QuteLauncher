@@ -48,12 +48,12 @@ static QObject *system_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 
 int main(int argc, char *argv[])
 {
-    QScopedPointer<QApplication> app(new QApplication(argc, argv));
+//    QScopedPointer<QApplication> app(new QApplication(argc, argv));
 
-    QCoreApplication::setOrganizationName("Iktwo Corp.");
-    QCoreApplication::setOrganizationDomain("iktwo.com");
-    QCoreApplication::setApplicationName("QuteLauncher");
-
+//    QCoreApplication::setOrganizationName("Iktwo Corp.");
+//    QCoreApplication::setOrganizationDomain("iktwo.com");
+//    QCoreApplication::setApplicationName("QuteLauncher");
+    QApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
     QObject::connect(&engine, SIGNAL(quit()), QCoreApplication::instance(), SLOT(quit()));
@@ -66,6 +66,6 @@ int main(int argc, char *argv[])
     engine.addImageProvider(QLatin1String("icon"), new IconImageProvider());
 
     engine.load(QUrl("qrc:/qml/qml/main.qml"));
-
-    return app->exec();
+    return app.exec();
+//    return app->exec();
 }
